@@ -68,12 +68,12 @@ var capsConfig = {
   },
   'iphone6': {
     'browser' : 'Chrome',
-    'browser_version' : '42.0',
-    'os' : 'OS X',
-    'os_version' : 'Yosemite',
+    'browser_version' : '61.0',
+    'os' : 'Windows',
+    'os_version' : '10',
     'chromeOptions': {
       'mobileEmulation': {
-        'deviceName': 'Apple iPhone 6'
+        'deviceName': 'iPhone 6'
       }
     }
   },
@@ -110,7 +110,7 @@ var capsConfig = {
       }
     }
   },
-  '6SPlus': {
+  'iPhone6Plus': {
     'browser' : 'Chrome',
     'browser_version' : '61.0',
     'os' : 'Windows',
@@ -129,7 +129,7 @@ var caps = selectedCaps ? capsConfig[selectedCaps] : undefined;
 var providerPrefix = process.env.PROVIDER_PREFIX ? process.env.PROVIDER_PREFIX + '-' : '';
 var testName = selectedCaps ? providerPrefix + selectedCaps : providerPrefix + 'default';
 
-var baseUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://qa.shop.onefc.com/men';
+var baseUrl = process.env.BASE_URL ? process.env.BASE_URL : 'http://qa.shop.onefc.com/';
 
 var resultsCallback = process.env.DEBUG ? console.log : shoovWebdrivercss.processResults;
 
@@ -146,10 +146,79 @@ describe('Visual monitor testing', function() {
     shoovWebdrivercss.after(done);
   });
 
-  it('should show the mens category page',function(done) {
+  // Method to take HomePage screenshots
+  it('should open OneChampionShip homepage',function(done) {
+    client
+      .url(baseUrl)      
+      .webdrivercss(testName + '.home_page', {
+        name: '1',
+        exclude: [],
+        remove: [],
+        hide: [],
+        screenWidth: selectedCaps == 'chrome' ? [640, 960, 1200] : undefined,
+      }, resultsCallback)
+      .call(done);
+  });
+
+  //Method to take login page screenshots
+  it('should open OneChampionShip login page',function(done) {
+    client
+      .url(baseUrl + 'customer/account/login/')      
+      .webdrivercss(testName + '.login_page', {
+        name: '1',
+        exclude: [],
+        remove: [],
+        hide: [],
+        screenWidth: selectedCaps == 'chrome' ? [640, 960, 1200] : undefined,
+      }, resultsCallback)
+      .call(done);
+  });
+
+  //Methods to take sceenshot of T-SHIRT category page after login
+  it('should redirect on t-shirt page after login',function(done) {
+    client
+      .url(baseUrl + 'customer/account/login/')
+      .setValue('.//*[@id="email"]','nitesh.sharma@incedoinc.com')
+      .setValue('.//*[@id="pass"]','asl@12345')
+      .submitForm('.//*[@id="send2"]')
+      .pause(5000)
+      .webdrivercss(testName + '.tshirt_category_page_after_login', {
+        name: '1',
+        exclude: [],
+        remove: [],
+        hide: [],
+        screenWidth: selectedCaps == 'chrome' ? [640, 960, 1200] : undefined,
+      }, resultsCallback)
+      .call(done);
+  });
+
+  //Methods to take sceenshot of MENS category page after login
+  it('should redirect on mens category page after login',function(done) {
     client
       .url(baseUrl)
-      .webdrivercss(testName + '.menscategorypage', {
+      .click('.navbar-toggler.navbar-toggler-right')
+      .pause(5000)
+      .click('.//*[@id="navbarSupportedContent"]/ul/li[1]/a')
+      .pause(5000)
+      .webdrivercss(testName + '.mens_category_page_after_login', {
+        name: '1',
+        exclude: [],
+        remove: [],
+        hide: [],
+        screenWidth: selectedCaps == 'chrome' ? [640, 960, 1200] : undefined,
+      }, resultsCallback)
+      .call(done);
+  });
+
+  //Methods to take sceenshot of WOMEN category page after login
+  it('should redirect on women category page after login',function(done) {
+    client
+      .url(baseUrl)
+      .click('.navbar-toggler.navbar-toggler-right')
+      .pause(5000)
+      .click('.//*[@id="navbarSupportedContent"]/ul/li[2]/a')
+      .pause(5000)
+      .webdrivercss(testName + '.women_category_page_after_login', {
         name: '1',
         exclude: [],
         remove: [],
@@ -159,3 +228,4 @@ describe('Visual monitor testing', function() {
       .call(done);
   });
 });
+

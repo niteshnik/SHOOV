@@ -21,3 +21,4 @@ script:
 
   - cd ./visual-monitor
   - PROVIDER_PREFIX=browserstack SELECTED_CAPS=iphone6 mocha
+  - PROVIDER_PREFIX=browserstack SELECTED_CAPS=galaxyS5 mocha
